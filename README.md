@@ -1,1 +1,1 @@
->>> rename .envcopy to .env
+## This should be a description of your project
