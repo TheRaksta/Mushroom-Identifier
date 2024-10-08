@@ -1,0 +1,1 @@
+>>> rename .envcopy to .env
