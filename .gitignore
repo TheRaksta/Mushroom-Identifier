@@ -15,3 +15,8 @@ dist/
 
 images/
 images_reshaped/
+
+
+notebooks/mushroom_images.npy
+notebooks/mushroom_metadata.pkl
+notebooks/species_analysis.csv
