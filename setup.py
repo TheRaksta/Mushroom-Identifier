@@ -7,5 +7,5 @@ requirements = [x.strip() for x in content if "git+" not in x]
 
 setup(name="shroom-ai",
       description="Package for identifyng edible mushroom via an image",
-      requires=requirements,
+      install_requires=requirements,
       packages=find_packages())
