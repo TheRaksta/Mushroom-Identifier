@@ -12,3 +12,6 @@ dist/
 *.iml
 *.egg-info
 *.vscode
+
+images/
+images_reshaped/
