@@ -17,3 +17,8 @@ images/
 images_reshaped/
 
 gcp/
+
+notebooks/mushroom_images.npy
+notebooks/mushroom_metadata.pkl
+notebooks/species_analysis.csv
+
