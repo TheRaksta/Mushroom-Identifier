@@ -1,0 +1,28 @@
+shroom_ai/
+│
+├── model_training/
+│   ├── config/
+│   │   └── config.py
+│   ├── data/
+│   │   └── data_loader.py
+│   ├── models/
+│   │   ├── model_builder.py
+│   │   └── model_trainer.py
+│   ├── utils/
+│   │   ├── cloud_utils.py
+│   │   └── performance_utils.py
+│   └── main.py
+│
+├── model_deployment/
+│   ├── config/
+│   │   └── config.py
+│   ├── utils/
+│   │   ├── cloud_utils.py
+│   │   ├── image_utils.py
+│   │   └── model_utils.py
+│   ├── inference/
+│   │   └── predictor.py
+│   └── app.py
+│
+├── requirements.txt
+└── README.md
