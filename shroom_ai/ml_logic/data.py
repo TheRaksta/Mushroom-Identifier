@@ -2,7 +2,6 @@
 from google.cloud import storage
 from io import BytesIO
 from PIL import Image
-from shroom_ai.params import ORIGINAL_KAGGLE_IMAGES_GCP_BUCKET_NAME, RESIZED_KAGGLE_IMAGES_GCP_BUCKET_NAME
 from typing import List
 
 def get_blobs_from_bucket(bucket_name: str) -> List[storage.Blob]:
@@ -33,7 +32,3 @@ def upload_resized_images(source_bucket_name: str, dest_bucket_name: str, new_si
         print(f'Resized and uploaded: {blob.name} to {dest_bucket_name}')
 
     print(" Finished uploading all the magic 🍄🍄🍄🍄🍄🍄🍄🍄")
-
-## Will not be committed
-if __name__ == "__main__":
-    upload_resized_images(source_bucket_name=ORIGINAL_KAGGLE_IMAGES_GCP_BUCKET_NAME, dest_bucket_name=RESIZED_KAGGLE_IMAGES_GCP_BUCKET_NAME)
