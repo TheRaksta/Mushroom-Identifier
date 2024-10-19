@@ -30,7 +30,7 @@ def upload_resized_images(client: storage.Client, source_bucket_name: str, dest_
         new_blob.upload_from_string(resized_image_data, content_type=upload_content_type)
         print(f'Resized and uploaded: {blob.name} to {dest_bucket_name}')
 
-    print(" Finished uploading all the magic 🍄🍄🍄🍄🍄🍄🍄🍄")
+    print("Finished uploading all the magic 🍄🍄🍄🍄🍄🍄🍄🍄")
 
 def get_storage_client(project_id: str, credentials_path: str) -> storage.Client:
     credentials = service_account.Credentials.from_service_account_file(credentials_path)
