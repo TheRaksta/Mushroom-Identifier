@@ -1,26 +1,26 @@
 import numpy as np
 from PIL import Image
 from io import BytesIO
-from config import config
+# from config import config
 
-def load_images_from_gcs(bucket):
-    blobs = bucket.list_blobs(prefix=config.GCS_IMAGE_PREFIX)
-    images = []
-    labels = []
-    for blob in blobs:
-        if blob.name.lower().endswith(('.jpg', '.jpeg', '.png')):
-            image_data = blob.download_as_bytes()
-            img = Image.open(BytesIO(image_data))
-            img = img.resize(config.IMAGE_SIZE)
-            img_array = np.array(img) / 255.0
-            images.append(img_array)
-            
-            # Extract label from path
-            path_parts = blob.name.split('/')
-            category = path_parts[-2]
-            labels.append(1 if category == 'edible' else 0)
-    
-    return np.array(images), np.array(labels)
+# def load_images_from_gcs(bucket):
+#     blobs = bucket.list_blobs(prefix=config.GCS_IMAGE_PREFIX)
+#     images = []
+#     labels = []
+#     for blob in blobs:
+#         if blob.name.lower().endswith(('.jpg', '.jpeg', '.png')):
+#             image_data = blob.download_as_bytes()
+#             img = Image.open(BytesIO(image_data))
+#             img = img.resize(config.IMAGE_SIZE)
+#             img_array = np.array(img) / 255.0
+#             images.append(img_array)
+
+#             # Extract label from path
+#             path_parts = blob.name.split('/')
+#             category = path_parts[-2]
+#             labels.append(1 if category == 'edible' else 0)
+
+#     return np.array(images), np.array(labels)
 
 
 ### OLD CODE - Not relevant to ML workflow
@@ -28,6 +28,7 @@ def load_images_from_gcs(bucket):
 from google.cloud import storage
 from io import BytesIO
 from PIL import Image
+from shroom_ai.params import ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME
 from typing import List
 
 def get_blobs_from_bucket(bucket_name: str) -> List[storage.Blob]:
@@ -58,3 +59,15 @@ def upload_resized_images(source_bucket_name: str, dest_bucket_name: str, new_si
         print(f'Resized and uploaded: {blob.name} to {dest_bucket_name}')
 
     print(" Finished uploading all the magic 🍄🍄🍄🍄🍄🍄🍄🍄")
+
+# Will not be committed
+if __name__ == "__main__":
+    bucket_name = ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME
+    blobs = get_blobs_from_bucket(bucket_name)
+    for blob in blobs:
+        print(blob.name)
+        image_data = blob.download_as_bytes()
+        print(type(image_data))
+        resized_image_data = resize_image(image_data=image_data)
+        print("Resized", type(resized_image_data))
+        break
