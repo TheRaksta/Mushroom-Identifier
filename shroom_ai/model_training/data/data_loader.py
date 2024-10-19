@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image
 from io import BytesIO
+from google.oauth2 import service_account
 # from config import config
 
 # def load_images_from_gcs(bucket):
@@ -28,7 +29,7 @@ from io import BytesIO
 from google.cloud import storage
 from io import BytesIO
 from PIL import Image
-from shroom_ai.params import ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME
+from shroom_ai.params import ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME, RAKESH_GCP_PROJECT_ID, GOOGLE_APPLICATION_CREDENTIALS
 from typing import List
 
 def get_blobs_from_bucket(bucket_name: str) -> List[storage.Blob]:
@@ -60,8 +61,15 @@ def upload_resized_images(source_bucket_name: str, dest_bucket_name: str, new_si
 
     print(" Finished uploading all the magic 🍄🍄🍄🍄🍄🍄🍄🍄")
 
+def get_storage_client(project_id: str, credentials=str) -> storage.Client:
+    client = storage.Client(project=project_id, credentials=credentials)
+    return client
+
 # Will not be committed
 if __name__ == "__main__":
+    credentials_path = GOOGLE_APPLICATION_CREDENTIALS
+    credentials = service_account.Credentials.from_service_account_file(credentials_path)
+    client = storage.Client(project=RAKESH_GCP_PROJECT_ID, credentials=credentials)
     bucket_name = ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME
     blobs = get_blobs_from_bucket(bucket_name)
     for blob in blobs:
