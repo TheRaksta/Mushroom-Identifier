@@ -15,6 +15,7 @@ flatbuffers==24.3.25
 fonttools==4.54.1
 gast==0.6.0
 google-cloud-storage
+google.oauth2-service_account
 google-pasta==0.2.0
 grpcio==1.66.2
 h5py==3.12.1
