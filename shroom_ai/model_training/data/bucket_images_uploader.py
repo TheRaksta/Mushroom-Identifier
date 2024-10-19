@@ -2,8 +2,9 @@
 from google.cloud import storage
 from google.oauth2 import service_account
 from io import BytesIO
+import os
 from PIL import Image
-from shroom_ai.params import ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME, RAKESH_GCP_PROJECT_ID, GOOGLE_APPLICATION_CREDENTIALS, MUSHROOMS_APPLICATION_CREDENTIALS
+from shroom_ai.params import RESIZED_EDIBLE_IMAGES_GCP_BUCKET_NAME, RAKESH_GCP_PROJECT_ID, GOOGLE_APPLICATION_CREDENTIALS, MUSHROOMS_APPLICATION_CREDENTIALS, RESIZED_KAGGLE_IMAGES_GCP_BUCKET_NAME, RESIZED_KAGGLE_AND_EDIBLE_BUCKET_NAME, PIERS_GCP_PROJECT_ID
 from typing import List
 
 def get_blobs_from_bucket(client: storage.Client, bucket_name: str) -> List[storage.Blob]:
@@ -37,16 +38,49 @@ def get_storage_client(project_id: str, credentials_path: str) -> storage.Client
     client = storage.Client(project=project_id, credentials=credentials)
     return client
 
+def modify_path_to_be_edible_and_have_no_spaces(original_path):
+    directory, filename = os.path.split(original_path)
+    directory = directory.replace(" ", "_")
+    filename = filename.replace(" ", "_")
+    new_directory = os.path.join("edible", directory)
+    new_path = os.path.join(new_directory, filename)
+    return new_path
+
+def copy_blob_to_new_bucket(client: storage.Client, source_bucket_name, destination_bucket_name):
+    """Copies a blob from one bucket to another with a new name."""
+    # Get the source bucket and blob
+    source_bucket = client.bucket(source_bucket_name)
+    destination_bucket = client.bucket(destination_bucket_name)
+
+    blobs = source_bucket.list_blobs()
+    for blob in blobs:
+        destination_blob = destination_bucket.blob(blob.name)
+        destination_blob.rewrite(blob)
+        print(f'Resized and uploaded: {blob.name} to {destination_bucket_name}')
+
+    print("Success uploading the mushrooms 🍄🍄🍄🍄🍄🍄🍄🍄")
+
+def copy_blob_to_new_bucket_with_edible_category(source_client: storage.Client, destination_client: storage.Client, source_bucket_name, destination_bucket_name):
+    source_bucket = source_client.bucket(source_bucket_name)
+    destination_bucket = destination_client.bucket(destination_bucket_name)
+    blobs = source_bucket.list_blobs()
+
+    for blob in blobs:
+        new_name = modify_path_to_be_edible_and_have_no_spaces(blob.name)
+        destination_blob = destination_bucket.blob(new_name)
+        image_data = blob.download_as_bytes()
+        destination_blob.upload_from_string(image_data, content_type="image/jpeg")
+        print(f'Resized and uploaded: {new_name} to {destination_bucket_name}')
+
+    print("Success uploading the mushrooms 🍄🍄🍄🍄🍄🍄🍄🍄")
+
 # Will not be committed
 if __name__ == "__main__":
-    client = get_storage_client(project_id=RAKESH_GCP_PROJECT_ID, credentials_path=MUSHROOMS_APPLICATION_CREDENTIALS)
-    bucket_name = ORIGINAL_EDIBLE_IMAGES_GCP_BUCKET_NAME
-    bucket = client.get_bucket(bucket_name)
-    blobs = bucket.list_blobs()
-    for blob in blobs:
-        print(blob.name)
-        image_data = blob.download_as_bytes()
-        print(type(image_data))
-        resized_image_data = resize_image(image_data=image_data)
-        print("Resized", type(resized_image_data))
-        break
+    destination_client = get_storage_client(project_id=PIERS_GCP_PROJECT_ID, credentials_path=GOOGLE_APPLICATION_CREDENTIALS)
+    source_client = get_storage_client(project_id=RAKESH_GCP_PROJECT_ID, credentials_path=MUSHROOMS_APPLICATION_CREDENTIALS)
+    copy_blob_to_new_bucket_with_edible_category(
+        source_client=source_client,
+        destination_client=destination_client,
+        source_bucket_name=RESIZED_EDIBLE_IMAGES_GCP_BUCKET_NAME,
+        destination_bucket_name=RESIZED_KAGGLE_AND_EDIBLE_BUCKET_NAME
+        )
