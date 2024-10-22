@@ -4,7 +4,6 @@ from google.oauth2 import service_account
 from io import BytesIO
 import os
 from PIL import Image
-from shroom_ai.params import RESIZED_EDIBLE_IMAGES_GCP_BUCKET_NAME, RAKESH_GCP_PROJECT_ID, GOOGLE_APPLICATION_CREDENTIALS, MUSHROOMS_APPLICATION_CREDENTIALS, RESIZED_KAGGLE_IMAGES_GCP_BUCKET_NAME, RESIZED_KAGGLE_AND_EDIBLE_BUCKET_NAME, PIERS_GCP_PROJECT_ID
 from typing import List
 
 def get_blobs_from_bucket(client: storage.Client, bucket_name: str) -> List[storage.Blob]:
@@ -73,14 +72,3 @@ def copy_blob_to_new_bucket_with_edible_category(source_client: storage.Client, 
         print(f'Resized and uploaded: {new_name} to {destination_bucket_name}')
 
     print("Success uploading the mushrooms 🍄🍄🍄🍄🍄🍄🍄🍄")
-
-# Will not be committed
-if __name__ == "__main__":
-    destination_client = get_storage_client(project_id=PIERS_GCP_PROJECT_ID, credentials_path=GOOGLE_APPLICATION_CREDENTIALS)
-    source_client = get_storage_client(project_id=RAKESH_GCP_PROJECT_ID, credentials_path=MUSHROOMS_APPLICATION_CREDENTIALS)
-    copy_blob_to_new_bucket_with_edible_category(
-        source_client=source_client,
-        destination_client=destination_client,
-        source_bucket_name=RESIZED_EDIBLE_IMAGES_GCP_BUCKET_NAME,
-        destination_bucket_name=RESIZED_KAGGLE_AND_EDIBLE_BUCKET_NAME
-        )
