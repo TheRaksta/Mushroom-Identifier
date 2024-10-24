@@ -1,3 +1,0 @@
-BUCKET_NAME = ''
-DATA_FOLDER = ''
-
