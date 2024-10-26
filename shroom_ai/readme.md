@@ -2,6 +2,8 @@
 
 Shroom AI is a machine learning project for classifying mushrooms as edible or poisonous using image recognition. The project is divided into two main components: model training and model deployment.
 
+To start the project, run ./run_dev
+
 ## Project Structure
 
 ```

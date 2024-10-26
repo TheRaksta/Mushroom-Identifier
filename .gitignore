@@ -23,3 +23,4 @@ notebooks/mushroom_metadata.pkl
 notebooks/species_analysis.csv
 notebooks/gcp.ipynb
 notebooks/gcp_model.ipynb
+shroom_ai/models/models_mushroom_classification_model_20241026_094856.h5

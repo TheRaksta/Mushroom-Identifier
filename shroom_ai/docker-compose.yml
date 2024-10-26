@@ -1,0 +1,33 @@
+# docker-compose.yml (in root directory)
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models  # Updated path based on your structure
+    environment:
+      - MODEL_PATH=/app/models/models_mushroom_classification_model_20241026_094856.h5
+    networks:
+      - shroom-network
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - shroom-network
+
+networks:
+  shroom-network:
+    driver: bridge
