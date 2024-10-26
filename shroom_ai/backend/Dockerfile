@@ -1,3 +1,4 @@
+# backend/Dockerfile
 FROM python:3.10-slim
 
 WORKDIR /app
@@ -18,18 +19,5 @@ COPY . .
 # Expose port
 EXPOSE 8000
 
-# Start the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-# backend/docker-compose.yml
-version: '3.8'
-
-services:
-  api:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - ../../../models:/app/models
-    environment:
-      - MODEL_PATH=/app/models/models_mushroom_classification_model_20241026_094856.h5
+# Start the application using python module path
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
