@@ -21,4 +21,5 @@ gcp/
 notebooks/mushroom_images.npy
 notebooks/mushroom_metadata.pkl
 notebooks/species_analysis.csv
-
+notebooks/gcp.ipynb
+notebooks/gcp_model.ipynb
