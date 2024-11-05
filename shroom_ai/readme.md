@@ -1,130 +1,193 @@
-# Shroom AI
+# 🍄 Shroom AI - Mushroom Classification System
 
-Shroom AI is a machine learning project for classifying mushrooms as edible or poisonous using image recognition. The project is divided into two main components: model training and model deployment.
+## Overview
+Shroom AI is a machine learning-powered application that helps identify mushrooms using computer vision. The system:
+1. Determines if a mushroom is edible or not
+2. For edible mushrooms, identifies the most likely species
+3. Provides confidence scores for all predictions
 
-To start the project, run ./run_dev
+⚠️ **IMPORTANT SAFETY NOTICE**: This tool is for educational purposes only. Never consume wild mushrooms based solely on AI predictions. Always consult with professional mycologists for mushroom identification.
 
-## Project Structure
+## 🏗️ Architecture
+The project consists of two main components:
+- **Frontend**: A Streamlit web application for image upload and result display
+- **Backend**: A FastAPI service running two ML models:
+  - Edibility detection model
+  - Species identification model (activated only for edible mushrooms)
 
+## 🛠️ Prerequisites
+- Python 3.10 or higher
+- Docker and Docker Compose (for containerized deployment)
+- Make (for using the provided Makefile)
+- At least 4GB of RAM
+- 10GB of free disk space
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/shroom_ai.git
+cd shroom_ai
+```
+
+### 2. Initial Setup
+```bash
+# Create models directory and check requirements
+make init-models
+
+# Set up development environment
+make setup
+```
+
+### 3. Add Required Models
+Add in your own model files in the `models/` directory:
+- `edible_detector.h5`: Mushroom edibility classification model
+- `species_detector.h5`: Mushroom species identification model
+
+### 4. Start the Application
+```bash
+# Start in development mode (Docker by default)
+make dev
+
+# Or start in local mode
+make dev-local
+```
+
+Visit `http://localhost:8501` to access the web interface.
+
+## 🛠️ Makefile Commands
+
+The project includes a Makefile to streamline setup and execution. Here are the available commands:
+
+### Primary Command
+```bash
+make setup-and-run
+```
+This is the main command you should use. It will:
+1. Check if Python 3.10+ is installed
+2. Verify Docker and Docker Compose installation
+3. Confirm all requirement files are present
+4. Verify ML models are in place
+5. Start the application if all checks pass
+
+When running this command, you'll see status updates like:
+```bash
+Checking Python installation...
+✓ Python 3.10 or higher is installed (3.10.2)
+
+Checking Docker installation...
+✓ Docker and Docker Compose are installed
+
+Checking dependencies...
+✓ All requirement files present
+
+Verifying ML models...
+✓ All required models present
+
+All checks passed! Starting application...
+```
+
+If any requirements are missing, you'll receive clear instructions on what needs to be added.
+
+### Additional Commands
+
+```bash
+# Stop the application
+make stop
+
+# Clean up temporary files and stop containers
+make clean
+
+# Display help information
+make help
+```
+
+### Common Issues and Solutions
+
+1. **Missing Models**
+   ```bash
+   ✗ Missing required models:
+     - edible_detector.h5 (Mushroom edibility classification model)
+     - species_detector.h5 (Mushroom species identification model)
+   ```
+   Solution: Add the required model files to the `models/` directory
+
+2. **Docker Not Running**
+   ```bash
+   ✗ Docker is not installed
+   ```
+   Solution: Install Docker and Docker Compose
+
+3. **Python Version**
+   ```bash
+   ✗ Python 3.10 or higher is required
+   ```
+   Solution: Install or upgrade to Python 3.10+
+
+### Best Practices
+- Always use `make setup-and-run` for the initial setup and running the application
+- Use `make stop` to properly shut down the application
+- If you encounter any issues, run `make clean` and try again
+
+## 🎯 Usage Guide
+
+1. Access the web interface at `http://localhost:8501`
+2. Upload a mushroom image using the file uploader
+3. Click "Classify" to analyze the image
+4. Review the results:
+   - Edibility status and confidence score
+   - If edible, top 3 likely species with confidence scores
+   - Safety warnings and recommendations
+
+## 🐳 Docker Configuration
+
+The application uses Docker Compose with two services:
+- Frontend (Streamlit) on port 8501
+- Backend (FastAPI) on port 8000
+
+## 📁 Project Structure
 ```
 shroom_ai/
-├── model_training/
-│   ├── config/
-│   ├── data/
-│   ├── models/
-│   ├── utils/
-│   └── main.py
-├── model_deployment/
-│   ├── config/
-│   ├── utils/
-│   ├── inference/
-│   └── app.py
-├── requirements.txt
-└── README.md
+├── backend/               # FastAPI backend service
+│   ├── config/           # Backend configuration
+│   └── services/         # Core services (image & model)
+├── frontend/             # Streamlit web interface
+├── models/               # ML model files
+├── Makefile             # Build and development commands
+└── docker-compose.yml   # Docker services configuration
 ```
 
-## Model Training
+## 🔒 Security Notes
+- The application includes safety warnings about mushroom consumption
+- Model predictions should never be the sole basis for mushroom consumption
+- Always verify mushroom identification with experts
 
-The `model_training` folder contains all the necessary code to train the mushroom classification model using images stored in Google Cloud Storage.
+## 🐛 Troubleshooting
 
-### Setup
-
-1. Install the required packages:
-   ```
-   pip install -r requirements.txt
-   ```
-
-2. Set up Google Cloud credentials:
-   - Create a service account key in the Google Cloud Console
-   - Download the JSON key file
-   - Set the environment variable:
-     ```
-     export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service-account-key.json"
-     ```
-
-3. Update the configuration:
-   - Edit `model_training/config/config.py` with your Google Cloud project details and desired model parameters
-
-### Training the Model
-
-To train the model:
-
-1. Navigate to the `model_training` folder:
-   ```
-   cd shroom_ai/model_training
+### Common Issues
+1. **Missing Models**
+   ```bash
+   make init-models  # Check model requirements
    ```
 
-2. Run the training script:
-   ```
-   python main.py
-   ```
-
-This script will:
-- Connect to Google Cloud Storage
-- Load and preprocess the mushroom images
-- Build and train the classification model
-- Save the trained model back to Google Cloud Storage
-
-## Model Deployment
-
-The `model_deployment` folder contains the code for deploying the trained model as a Flask API for real-time inference.
-
-### Setup
-
-1. Ensure you have installed all required packages from `requirements.txt`
-
-2. Set up Google Cloud credentials (if not already done in the training step)
-
-3. Update the configuration:
-   - Edit `model_deployment/config/config.py` with your Google Cloud project details and Flask app settings
-
-### Running the Inference API
-
-To start the Flask API for mushroom classification:
-
-1. Navigate to the `model_deployment` folder:
-   ```
-   cd shroom_ai/model_deployment
+2. **Docker Issues**
+   ```bash
+   make clean       # Clean and restart
+   make dev         # Start fresh
    ```
 
-2. Run the Flask app:
-   ```
-   python app.py
-   ```
+3. **Port Conflicts**
+   - Ensure ports 8000 and 8501 are available
+   - Modify docker-compose.yml if needed
 
-This will start a Flask server that:
-- Loads the most recent model from Google Cloud Storage
-- Exposes a `/predict` endpoint for mushroom classification
+### Error Messages
+- "Model not found": Place required models in models/ directory
+- "Connection refused": Ensure both services are running
+- "Out of memory": Increase Docker memory allocation
 
-### Using the API
+## 📚 Development Notes
 
-To classify a mushroom image:
-
-1. Send a POST request to `http://localhost:5000/predict` (adjust the host and port if necessary)
-2. Include the image file in the request body with the key 'image'
-
-Example using curl:
-```
-curl -X POST -F "image=@/path/to/mushroom_image.jpg" http://localhost:5000/predict
-```
-
-The API will return a JSON response with the classification result:
-```json
-{
-  "is_edible": true,
-  "confidence": 0.95,
-  "raw_score": 0.95
-}
-```
-
-## Maintenance and Updates
-
-### Updating the Model
-
-To update the model:
-1. Add new training data to the appropriate Google Cloud Storage bucket
-2. Run the training script in the `model_training` folder
-3. The new model will be automatically saved to Google Cloud Storage
-
-The deployment API will automatically use the latest model for predictions, so no further action is needed.
-
+### Best Practices
+- Always use `make format` before committing
+- Check logs using `make logs` when debugging
+- Use `make clean` to reset the environment

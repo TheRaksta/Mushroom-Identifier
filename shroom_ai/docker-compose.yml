@@ -1,4 +1,3 @@
-# docker-compose.yml (in root directory)
 version: '3.8'
 
 services:
@@ -9,9 +8,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./models:/app/models  # Updated path based on your structure
+      - ./models:/app/models
     environment:
-      - MODEL_PATH=/app/models/models_mushroom_classification_model_20241026_094856.h5
+      - EDIBLE_MODEL_PATH=/app/models/edible_detector.h5
+      - SPECIES_MODEL_PATH=/app/models/species_detector.h5
     networks:
       - shroom-network
 
