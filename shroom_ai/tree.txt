@@ -1,28 +1,47 @@
 shroom_ai/
-│
-├── model_training/
-│   ├── config/
-│   │   └── config.py
-│   ├── data/
-│   │   └── data_loader.py
-│   ├── models/
-│   │   ├── model_builder.py
-│   │   └── model_trainer.py
-│   ├── utils/
-│   │   ├── cloud_utils.py
-│   │   └── performance_utils.py
-│   └── main.py
-│
-├── model_deployment/
-│   ├── config/
-│   │   └── config.py
-│   ├── utils/
-│   │   ├── cloud_utils.py
-│   │   ├── image_utils.py
-│   │   └── model_utils.py
-│   ├── inference/
-│   │   └── predictor.py
-│   └── app.py
-│
+├── Makefile
+├── backend
+│   ├── Dockerfile
+│   ├── config
+│   │   └── settings.py
+│   ├── main.py
+│   ├── requirements.txt
+│   └── services
+│       ├── image_service.py
+│       └── model_service.py
+├── docker-compose.yml
+├── frontend
+│   ├── Dockerfile
+│   ├── config.py
+│   ├── requirements.txt
+│   └── streamlit_app.py
+├── models
+│   ├── edible_detector.h5
+│   └── species_detector.h5
+├── old
+│   ├── model_deployment
+│   │   ├── app.py
+│   │   ├── config
+│   │   │   └── config.py
+│   │   ├── inference
+│   │   │   └── predictor.py
+│   │   └── utils
+│   │       ├── cloud_utils.py
+│   │       ├── image_utils.py
+│   │       └── model_utils.py
+│   └── model_training
+│       ├── config
+│       │   └── config.py
+│       ├── data
+│       │   ├── bucket_images_uploader.py
+│       │   └── data_loader.py
+│       ├── main.py
+│       ├── models
+│       │   ├── model_builder.py
+│       │   └── model_trainer.py
+│       └── utils
+│           ├── cloud_utils.py
+│           └── performance_utils.py
+├── readme.md
 ├── requirements.txt
-└── README.md
+└── tree.txt

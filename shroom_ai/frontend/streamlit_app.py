@@ -16,18 +16,13 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption='Uploaded Image', use_column_width=True)
 
-    # When the user clicks the button, send the image to the API
+    # frontend/streamlit_app.py (modified section)
     if st.button("Classify"):
         try:
-            # Show spinner while processing
             with st.spinner('Analyzing mushroom...'):
-                # Prepare the file for upload
                 files = {"file": uploaded_file.getvalue()}
-                
-                # Send request to backend
                 response = requests.post(f"{API_URL}/classify", files=files)
                 
-                # Check if request was successful
                 if response.status_code == 200:
                     result = response.json()
                     edible = result.get("edible")
@@ -36,6 +31,19 @@ if uploaded_file is not None:
                     if edible is not None:
                         if edible:
                             st.success(f"This mushroom is EDIBLE! (Confidence: {confidence:.1f}%)")
+                            
+                            # Display species predictions if available
+                            if "species_predictions" in result:
+                                st.write("### Likely Species")
+                                st.write(f"We are {result['species_total_confidence']*100:.1f}% confident "
+                                    f"that this mushroom is one of these three species:")
+                                
+                                for i, pred in enumerate(result["species_predictions"], 1):
+                                    species = pred["species"]
+                                    conf = pred["confidence"] * 100
+                                    st.write(f"{i}. {species} ({conf:.1f}% confidence)")
+                                
+                                st.warning("⚠️ Always verify mushroom species with an expert before consumption!")
                         else:
                             st.error(f"This mushroom is NOT EDIBLE! (Confidence: {confidence:.1f}%)")
                             st.warning("⚠️ Never eat wild mushrooms without expert verification!")
